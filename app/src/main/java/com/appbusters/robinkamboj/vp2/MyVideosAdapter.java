@@ -56,8 +56,11 @@ class MyVideosAdapter extends AAH_VideosAdapter {
         holder.setVideoUrl(list.get(position).getVideo_url());
         //load image into imageview
         if (list.get(position).getImage_url() != null && !list.get(position).getImage_url().isEmpty()) {
-            picasso.load(holder.getImageUrl()).config(Bitmap.Config.RGB_565).into(holder.getAAH_ImageView());
+//            picasso.load(holder.getImageUrl()).config(Bitmap.Config.RGB_565).into(holder.getAAH_ImageView());
         }
+
+        holder.setVideoUrl(list.get(position).getVideo_url());
+        holder.playVideo();
 
         //to mute/un-mute video (optional)
         holder.getAah_vi().setOnClickListener(new View.OnClickListener() {
@@ -74,7 +77,7 @@ class MyVideosAdapter extends AAH_VideosAdapter {
             }
         });
 
-        if (list.get(position).getVideo_url() == null) {
+        if (list.get(position).getVideo_url()==null) {
             ((MyViewHolder) holder).img_vol.setVisibility(View.GONE);
         } else {
             ((MyViewHolder) holder).img_vol.setVisibility(View.VISIBLE);
