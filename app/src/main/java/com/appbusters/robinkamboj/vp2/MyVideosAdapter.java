@@ -1,6 +1,7 @@
 package com.appbusters.robinkamboj.vp2;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,26 +14,26 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class MyVideosAdapter extends AAH_VideosAdapter {
+class MyVideosAdapter extends AAH_VideosAdapter {
 
     private List<MyModel> list;
-    Picasso picasso;
+    private Picasso picasso;
 
-    public class MyViewHolder extends AAH_CustomViewHolder {
+    private class MyViewHolder extends AAH_CustomViewHolder {
         final TextView tv;
         final ImageView img_vol;
 
         //to mute/un-mute video (optional)
         boolean isMuted;
 
-        public MyViewHolder(View x) {
+        MyViewHolder(View x) {
             super(x);
             tv = (TextView) x.findViewById(R.id.tv);
             img_vol = (ImageView) x.findViewById(R.id.img_vol);
         }
     }
 
-    public MyVideosAdapter(List<MyModel> list_urls, Picasso p) {
+    MyVideosAdapter(List<MyModel> list_urls, Picasso p) {
         this.list = list_urls;
         this.picasso = p;
     }
@@ -41,6 +42,7 @@ public class MyVideosAdapter extends AAH_VideosAdapter {
     public AAH_CustomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.single_card, parent, false);
+        Log.e("CREATING VH", "My Videos Adapter");
         return new MyViewHolder(itemView);
     }
 
@@ -48,12 +50,24 @@ public class MyVideosAdapter extends AAH_VideosAdapter {
     public void onBindViewHolder(final AAH_CustomViewHolder holder, int position) {
         ((MyViewHolder) holder).tv.setText(list.get(position).getName());
 
+        Log.e("BINDING DATA", "My Videos Adapter");
+
         //todo
         holder.setImageUrl(list.get(position).getImage_url());
         holder.setVideoUrl(list.get(position).getVideo_url());
         //load image/thumbnail into imageview
+
         if (list.get(position).getImage_url() != null && !list.get(position).getImage_url().isEmpty())
-            picasso.load(holder.getImageUrl()).config(Bitmap.Config.RGB_565).into(holder.getAAH_ImageView());
+            picasso.load(holder.getImageUrl()).into(holder.getAAH_ImageView());
+
+        if(list.get(position).getVideo_url()!=null){
+            Log.e("videourl" + position, list.get(position).getVideo_url());
+            Log.e("imageurl" + position, list.get(position).getImage_url());
+            holder.playVideo();
+        }
+        else {
+            Log.e("imageurl" + position, list.get(position).getImage_url());
+        }
 
         //to mute/un-mute video (optional)
         holder.getAah_vi().setOnClickListener(new View.OnClickListener() {
@@ -71,7 +85,7 @@ public class MyVideosAdapter extends AAH_VideosAdapter {
         });
 
         if (list.get(position).getVideo_url()==null){
-            ((MyViewHolder) holder).img_vol.setVisibility(View.GONE);
+            ((MyViewHolder) holder).img_vol.setVisibility(View.INVISIBLE);
         }else {
             ((MyViewHolder) holder).img_vol.setVisibility(View.VISIBLE);
         }
@@ -84,6 +98,6 @@ public class MyVideosAdapter extends AAH_VideosAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        return 0;
+        return list.size();
     }
 }
