@@ -51,23 +51,12 @@ class MyVideosAdapter extends AAH_VideosAdapter {
     public void onBindViewHolder(final AAH_CustomViewHolder holder, int position) {
         ((MyViewHolder) holder).tv.setText(list.get(position).getName());
 
-        Log.e("BINDING DATA", "My Videos Adapter");
-
         //todo
         holder.setImageUrl(list.get(position).getImage_url());
         holder.setVideoUrl(list.get(position).getVideo_url());
-        //load image/thumbnail into imageview
-
-        if (list.get(position).getImage_url() != null && !list.get(position).getImage_url().isEmpty())
-            picasso.load(holder.getImageUrl()).into(holder.getAAH_ImageView());
-
-        if(list.get(position).getVideo_url()!=null){
-            Log.e("videourl" + position, list.get(position).getVideo_url());
-            Log.e("imageurl" + position, list.get(position).getImage_url());
-            ((MyViewHolder) holder).getAah_vi().getCustomVideoView().setSource(Uri.parse(list.get(position).getVideo_url()));
-        }
-        else {
-            Log.e("imageurl" + position, list.get(position).getImage_url());
+        //load image into imageview
+        if (list.get(position).getImage_url() != null && !list.get(position).getImage_url().isEmpty()) {
+            picasso.load(holder.getImageUrl()).config(Bitmap.Config.RGB_565).into(holder.getAAH_ImageView());
         }
 
         //to mute/un-mute video (optional)
@@ -77,30 +66,33 @@ class MyVideosAdapter extends AAH_VideosAdapter {
                 if (((MyViewHolder) holder).isMuted) {
                     holder.unmuteVideo();
                     ((MyViewHolder) holder).img_vol.setImageResource(android.R.drawable.ic_media_play);
-                    holder.getAah_vi().getCustomVideoView().startVideo();
                 } else {
                     holder.muteVideo();
                     ((MyViewHolder) holder).img_vol.setImageResource(android.R.drawable.ic_media_pause);
-                    holder.getAah_vi().getCustomVideoView().pauseVideo();
                 }
                 ((MyViewHolder) holder).isMuted = !((MyViewHolder) holder).isMuted;
             }
         });
 
-        if (list.get(position).getVideo_url()==null){
-            ((MyViewHolder) holder).img_vol.setVisibility(View.INVISIBLE);
-        }else {
+        if (list.get(position).getVideo_url() == null) {
+            ((MyViewHolder) holder).img_vol.setVisibility(View.GONE);
+        } else {
             ((MyViewHolder) holder).img_vol.setVisibility(View.VISIBLE);
         }
+
     }
+
 
     @Override
     public int getItemCount() {
         return list.size();
     }
 
+
     @Override
     public int getItemViewType(int position) {
-        return list.size();
+        return 0;
     }
+
+
 }
