@@ -1,6 +1,7 @@
 package com.appbusters.robinkamboj.vp2;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,7 +64,7 @@ class MyVideosAdapter extends AAH_VideosAdapter {
         if(list.get(position).getVideo_url()!=null){
             Log.e("videourl" + position, list.get(position).getVideo_url());
             Log.e("imageurl" + position, list.get(position).getImage_url());
-            holder.playVideo();
+            ((MyViewHolder) holder).getAah_vi().getCustomVideoView().setSource(Uri.parse(list.get(position).getVideo_url()));
         }
         else {
             Log.e("imageurl" + position, list.get(position).getImage_url());
@@ -76,9 +77,11 @@ class MyVideosAdapter extends AAH_VideosAdapter {
                 if (((MyViewHolder) holder).isMuted) {
                     holder.unmuteVideo();
                     ((MyViewHolder) holder).img_vol.setImageResource(android.R.drawable.ic_media_play);
+                    holder.getAah_vi().getCustomVideoView().startVideo();
                 } else {
                     holder.muteVideo();
                     ((MyViewHolder) holder).img_vol.setImageResource(android.R.drawable.ic_media_pause);
+                    holder.getAah_vi().getCustomVideoView().pauseVideo();
                 }
                 ((MyViewHolder) holder).isMuted = !((MyViewHolder) holder).isMuted;
             }
